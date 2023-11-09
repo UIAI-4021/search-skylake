@@ -6,20 +6,21 @@ input = 'Imam Khomeini International Airport - Raleigh Durham International Airp
 source = input[0]
 destination = input[1]
 
-locations = df.loc[df['SourceAirport'] == source]
-
-print(locations.iat[2,13])
-
 
 def dijkstra(source, destination):
+    reached = []
     frontier = PriorityQueue()
+    locations = df.loc[df['SourceAirport'] == source]
     for index in locations.index:
-        frontier.put(df.loc[index])
+        frontier.put(df['Distance'].loc[index],df.loc[index])
     while not frontier.empty:
         node = frontier.get
-        # check is goal or not
+        if node['DestinationAirport'] == destination:
+            return True
+        reached.append(node)
         children = df.loc[df['SourceAirport'] == source]
-        for index in children.index:
-            frontier.put(df.loc[index])
+        for children_index in children.index:
+            if children.loc[children_index] not in reached and children['DestinationAirport'].loc[children_index] != node['DestinationAirport'].loc[index]:
+                frontier.put(df['Distance'].loc[children_index],df.loc[children_index])
         
-    return 'path not found'
+    return False
