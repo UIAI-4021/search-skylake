@@ -5,20 +5,24 @@ def dijkstra(source, destination):
     reached = []
     frontier = PriorityQueue()
     locations = df.loc[df['SourceAirport'] == source]
-    for index in locations.index:
-        frontier.put((df['Distance'].loc[index], df.loc[index]))
+    for row in locations.iterrows():
+        frontier.put((row[1]['Distance'], row[0]))
     while not frontier.empty():
-        node = frontier.get()[1]
-        if node['DestinationAirport'] == destination:
+        pop = frontier.get()
+        distance = pop[0]
+        node = pop[1]
+        if df.loc[node, 'DestinationAirport'] == destination:
             return True
         reached.append(node)
-        children = df.loc[df['SourceAirport'] == source]
-        for children_index in children.index:
-            if children.loc[children_index] not in reached and children['DestinationAirport'].loc[children_index] != node['DestinationAirport'].loc[index]:
-                frontier.put((df['Distance'].loc[children_index]+node['DestinationAirport'].loc[index],df.loc[children_index]))
+        children = df.loc[df['SourceAirport'] == df.loc[node, 'DestinationAirport']]
+        for children_row in children.iterrows():
+            if children_row[0] not in reached:
+                frontier.put((children_row[1]['Distance'] + distance, children_row[0]))
+
 
 df = pd.read_csv('Flight_Data.csv')
-input = 'Hamad International Airport - Imam Khomeini International Airport'.split(' - ')
+#input = 'General Edward Lawrence Logan International Airport - John F Kennedy International Airport'.split(' - ')
+input = 'Imam Khomeini International Airport - Raleigh Durham International Airport'.split(' - ')
 source = input[0]
 destination = input[1]
 print(dijkstra(source,destination))
