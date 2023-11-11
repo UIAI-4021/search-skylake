@@ -50,7 +50,7 @@ def a_star(source , destination):
     locations = df.loc[df['SourceAirport'] == source]
     for row in locations.iterrows():
         reached.append(row[1]['DestinationAirport'])
-        f = heuristic(row[1]['SourceAirport'] , destination) + row[1]['Distance']
+        f = heuristic(row[1]['DestinationAirport'] , destination) + row[1]['Distance']
         frontier.put((f, row[0]))
         path.update({row[0]: [row[0]]})
     while not frontier.empty():
@@ -64,7 +64,7 @@ def a_star(source , destination):
         children = df.loc[df['SourceAirport'] == df.loc[node, 'DestinationAirport']]
         for children_row in children.iterrows():
             if children_row[1]['DestinationAirport'] not in reached:
-                f = heuristic(children_row[1]['SourceAirport'] , destination) + distance
+                f = heuristic(children_row[1]['DestinationAirport'] , destination) + distance + children_row[1]['Distance']
                 frontier.put((f, children_row[0]))
                 path.update({children_row[0]: path[node].copy()+ [children_row[0]]})
 
