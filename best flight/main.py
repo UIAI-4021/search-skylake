@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 from geopy.distance import great_circle as GRC
 from queue import PriorityQueue
@@ -69,19 +70,39 @@ def a_star(source , destination):
 
 
 
+def write_result(algorithm, time, data):
+    f = open("skylake-UIAI4021-PR1-Q1(" + algorithm + ").txt", "w")
+    f.write(algorithm + ' Algorithm')
+    f.write("\nExecution Time:" + str(time))
+    f.write('\n.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
+    index = 1
+    distance_sum=0
+    price_sum=0
+    time_sum=0
+    for i in data:
+        f.write('\nFlight #' + str(index) + '(' + df.loc[i, 'Airline'] + ')')
+        f.write('\nFrom: ' + df.loc[i, 'SourceAirport'] + ' - ' + df.loc[i, 'SourceAirport_Country'] + ', ' + df.loc[i, 'SourceAirport_City'])  
+        f.write('\nFrom: ' + df.loc[i, 'DestinationAirport'] + ' - ' + df.loc[i, 'DestinationAirport_Country'] + ', ' + df.loc[i, 'DestinationAirport_City'])
+        f.write('\nDistance: ' + str(df.loc[i, 'Distance']) + 'km')
+        f.write('\nTime: ' + str(df.loc[i, 'FlyTime']) + ' h')
+        f.write('\nPrice: ' + str(df.loc[i, 'Price']) + ' $')
+        f.write('\n----------------------------')
+        index += 1
+        distance_sum += df.loc[i, 'Distance']
+        time_sum += df.loc[i, 'FlyTime']
+        price_sum += df.loc[i, 'Price']
+    f.write('\nTotal Price: ' + str(price_sum) + ' $')
+    f.write('\nTotal Distance: ' + str(distance_sum) + ' km')
+    f.write('\nTotal Time: ' + str(time_sum) + ' h')
+
+
 df = pd.read_csv('Flight_Data.csv')
-input = 'Imam Khomeini International Airport - Raleigh Durham International Airport'.split(' - ')
-#input = 'General Edward Lawrence Logan International Airport - John F Kennedy International Airport'.split(' - ')
+input = input().split(' - ')
 source = input[0]
 destination = input[1]
+start_time = time.time()
 finded_path = a_star(source,destination)
-print(finded_path)
-
-
-distance_sum=0
-
-for i in finded_path:
-
-    distance_sum += df.loc[i, 'Distance']
-
-print('\nTotal Distance: : ' + str(distance_sum) + ' km')
+write_result('a*', (time.time() - start_time), finded_path)
+start_time = time.time()
+finded_path = dijkstra(source,destination)
+write_result('dijkstra', (time.time() - start_time), finded_path)
