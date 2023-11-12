@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd 
-from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 
@@ -39,8 +38,15 @@ stops_map = {
 train['stops'] = train['stops'].map(stops_map)
 train.info()
 
-X_train, X_test, y_train, y_test = train_test_split(train[['departure_time', 'stops', 'arrival_time', 'arrival_time', 'duration', 'days_left']], train['price'], random_state=42, shuffle=True) # x , y , percent of test size, random state, shuffle
+X_train, X_test, y_train, y_test = train_test_split(train[['departure_time', 'stops', 'arrival_time', 'class', 'duration', 'days_left']], train['price'], random_state=42, shuffle=True) # x , y , percent of test size, random state, shuffle
 
 
+w = []
+for i in range(6):
+    w.append(np.random.randn(1))
+b = np.random.randn(1)
 
+yp = []
 
+for i in X_train.iterrows():
+    yp[i] = w[0] * X_train[1]['departure_time'] + w[1] * X_train[1]['stops'] + w[2] * X_train[1]['arrival_time'] + w[3] * X_train[1]['class'] + w[4] * X_train[1]['duration'] + w[5] * X_train[1]['days_left'] + b
