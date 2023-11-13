@@ -1,0 +1,27 @@
+a* Algorithm
+Execution Time:0.1426854133605957
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+Flight #1(Turkish Airlines)
+From: Imam Khomeini International Airport - Iran, Tehran
+From: Atatürk International Airport - Turkey, Istanbul
+Distance: 2040.9788105605924km
+Time: 3.146568931430481 h
+Price: 238.34825095926877 $
+----------------------------
+Flight #2(Turkish Airlines)
+From: Atatürk International Airport - Turkey, Istanbul
+From: John F Kennedy International Airport - United States, New York
+Distance: 8051.744239939527km
+Time: 10.006514457508697 h
+Price: 836.7714079883192 $
+----------------------------
+Flight #3(American Airlines)
+From: John F Kennedy International Airport - United States, New York
+From: Raleigh Durham International Airport - United States, Raleigh-durham
+Distance: 686.5030412178495km
+Time: 1.618085273260483 h
+Price: 131.70386312837869 $
+----------------------------
+Total Price: 1206.8235220759668 $
+Total Distance: 10779.226091717968 km
+Total Time: 14.771168662199662 h

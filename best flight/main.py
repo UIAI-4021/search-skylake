@@ -38,8 +38,7 @@ def heuristic(source , destination):
     destination_lat =temp.iloc[0]['DestinationAirport_Latitude']
     destination_lon =temp.iloc[0]['DestinationAirport_Longitude']
     resault =  GRC([source_lat , source_lon],[destination_lat , destination_lon]).km
-    return resault
-
+    return resault - 5000
 
 
 def a_star(source , destination):
@@ -71,7 +70,7 @@ def a_star(source , destination):
 
 
 def write_result(algorithm, time, data):
-    f = open("skylake-UIAI4021-PR1-Q1(" + algorithm + ").txt", "w")
+    f = open("best flight/4-UIAI4021-PR1-Q1(" + algorithm + ").txt", "w")
     f.write(algorithm + ' Algorithm')
     f.write("\nExecution Time:" + str(time))
     f.write('\n.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
@@ -95,8 +94,7 @@ def write_result(algorithm, time, data):
     f.write('\nTotal Distance: ' + str(distance_sum) + ' km')
     f.write('\nTotal Time: ' + str(time_sum) + ' h')
 
-
-df = pd.read_csv('Flight_Data.csv')
+df = pd.read_csv('best flight/Flight_Data.csv')
 input = input().split(' - ')
 source = input[0]
 destination = input[1]
