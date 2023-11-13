@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import r2_score
 
 
-train = pd.read_csv('Flight_Price_Dataset_Q2.csv')
+train = pd.read_csv('linear regression/Flight_Price_Dataset_Q2.csv')
 train['price'] = train['price'].astype(float)
 
 class_map = {
@@ -69,11 +69,13 @@ for repeat_counte in range(5000):
     for i in range(6):
         w[i] = w[i] - lr * w_grad[i]
 
-print(time.time() - start_time)
-
 yp_test = w[0] * X_test['departure_time'] + w[1] * X_test['stops'] + w[2] * X_test['arrival_time'] + w[3] * X_test['class'] + w[4] * X_test['duration'] + w[5] * X_test['days_left'] + b
 
-print(mean_squared_error(y_test, yp_test))
-print(sqrt(mean_squared_error(y_test, yp_test)))
-print(mean_absolute_error(y_test, yp_test))
-print(r2_score(y_test, yp_test))
+f = open("linear regression/4-UIAI4021-PR1-Q2.txt", "w")
+f.write('PRICE = ' + str(w[0][0]) + ' * departure_time + ' + str(w[1][0]) + ' * stops + ' + str(w[2][0]) + ' * arrival_time + ' + str(w[3][0]) + ' * class + ' + str(w[4][0]) + ' * duration + ' + str(w[5][0]) + ' * days_left + ' + str(b[0]))
+f.write('\nTraining Time: ' + str((time.time() - start_time)) + ' s')
+f.write('\n\nLogs:')
+f.write('\nMSE: ' + str(mean_squared_error(y_test, yp_test)))
+f.write('\nRMSE: ' + str(sqrt(mean_squared_error(y_test, yp_test))))
+f.write('\nMAE: ' + str(mean_absolute_error(y_test, yp_test)))
+f.write('\nR2: ' + str(r2_score(y_test, yp_test)))
