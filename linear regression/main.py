@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from sklearn.linear_model import LinearRegression
-
 
 
 train = pd.read_csv('Flight_Price_Dataset_Q2.csv')
@@ -43,36 +40,27 @@ stops_map = {
 }
 train['stops'] = train['stops'].map(stops_map)
 
-X_train, X_test, y_train, y_test = train_test_split(train[['departure_time', 'stops', 'arrival_time', 'class', 'duration', 'days_left']], train['price'], test_size=0.999, random_state=42, shuffle=False) # x , y , percent of test size, random state, shuffle
+X_train, X_test, y_train, y_test = train_test_split(train[['departure_time', 'stops', 'arrival_time', 'class', 'duration', 'days_left']], train['price'], test_size=0.2, random_state=42, shuffle=True) # x , y , percent of test size, random state, shuffle
 
 
 w = []
+np.random.seed(2)
 for i in range(6):
     w.append(np.random.randn(1))
 b = np.random.randn(1)
-
-for repeat_counte in range(100):
-    yp = pd.DataFrame(columns = ['price'])
-
-    for i in X_train.iterrows():
-        yp.loc[i[0], 'price'] = w[0] * i[1]['departure_time'] + w[1] * i[1]['stops'] + w[2] * i[1]['arrival_time'] + w[3] * i[1]['class'] + w[4] * i[1]['duration'] + w[5] * i[1]['days_left'] + b
-    MAE_error = round(mean_absolute_error(y_train, yp), 10)
-
-    b_grad = -2 * MAE_error
+lr = 0.000966
+for repeat_counte in range(5000):
+    yp = w[0] * X_train['departure_time'] + w[1] * X_train['stops'] + w[2] * X_train['arrival_time'] + w[3] * X_train['class'] + w[4] * X_train['duration'] + w[5] * X_train['days_left'] + b
+    error = (y_train - yp)
+    loss = (error ** 2).mean()
+    b_grad = -2 * error.mean()
     w_grad = [0] * (6)
-
-    for i in range (6):
-        for j in X_train.iterrows():
-            w_grad[i] += (j[1][i] * (yp.loc[j[0], 'price'] - y_train.loc[j[0]]))
-        w_grad[i] = w_grad[i] * (-2) / len(X_train.index)
-
-
-    lr = 0.1
-    b = np.round(b - lr * b_grad, 10 )
+    w_grad[0] = -2 * (X_train['departure_time'] * error).mean()
+    w_grad[1] = -2 * (X_train['stops'] * error).mean()
+    w_grad[2] = -2 * (X_train['arrival_time'] * error).mean()
+    w_grad[3] = -2 * (X_train['class'] * error).mean()
+    w_grad[4] = -2 * (X_train['duration'] * error).mean()
+    w_grad[5] = -2 * (X_train['days_left'] * error).mean()
+    b = b - lr * b_grad
     for i in range(6):
-        w[i] = np.round(w[i] - lr * w_grad[i], 10)
-
-
-
-print(b)
-print(w)
+        w[i] = w[i] - lr * w_grad[i]
