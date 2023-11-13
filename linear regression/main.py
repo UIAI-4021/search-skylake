@@ -1,6 +1,11 @@
+from math import sqrt
+import time
 import numpy as np
 import pandas as pd 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
 
 
 train = pd.read_csv('Flight_Price_Dataset_Q2.csv')
@@ -42,7 +47,7 @@ train['stops'] = train['stops'].map(stops_map)
 
 X_train, X_test, y_train, y_test = train_test_split(train[['departure_time', 'stops', 'arrival_time', 'class', 'duration', 'days_left']], train['price'], test_size=0.2, random_state=42, shuffle=True) # x , y , percent of test size, random state, shuffle
 
-
+start_time = time.time()
 w = []
 np.random.seed(2)
 for i in range(6):
@@ -52,7 +57,6 @@ lr = 0.000966
 for repeat_counte in range(5000):
     yp = w[0] * X_train['departure_time'] + w[1] * X_train['stops'] + w[2] * X_train['arrival_time'] + w[3] * X_train['class'] + w[4] * X_train['duration'] + w[5] * X_train['days_left'] + b
     error = (y_train - yp)
-    loss = (error ** 2).mean()
     b_grad = -2 * error.mean()
     w_grad = [0] * (6)
     w_grad[0] = -2 * (X_train['departure_time'] * error).mean()
@@ -64,3 +68,12 @@ for repeat_counte in range(5000):
     b = b - lr * b_grad
     for i in range(6):
         w[i] = w[i] - lr * w_grad[i]
+
+print(time.time() - start_time)
+
+yp_test = w[0] * X_test['departure_time'] + w[1] * X_test['stops'] + w[2] * X_test['arrival_time'] + w[3] * X_test['class'] + w[4] * X_test['duration'] + w[5] * X_test['days_left'] + b
+
+print(mean_squared_error(y_test, yp_test))
+print(sqrt(mean_squared_error(y_test, yp_test)))
+print(mean_absolute_error(y_test, yp_test))
+print(r2_score(y_test, yp_test))
